@@ -3,7 +3,7 @@ import requests, discord
 API_URL = "https://fortnite-api.com/v2/shop/br/combined"
 
 def fetch_shop():
-    r = requests.get(API_URL, headers={"User-Agent": "GalacticModz-EFS-Clone/1.0"}, timeout=20)
+    r = requests.get(API_URL, headers={"User-Agent": "GalacticModz-ShopBot/1.0"}, timeout=20)
     r.raise_for_status()
     return r.json()
 
@@ -17,17 +17,15 @@ def build_shop_embeds(shop_json, creator_code="YTBUSTY", full=False):
     for title, entries in sections:
         if not entries:
             continue
-        chunk_size = 8 if full else 5  # discord embed has field limits; keep tidy
+        chunk_size = 8 if full else 5
         for i in range(0, len(entries), chunk_size):
             chunk = entries[i:i+chunk_size]
             e = discord.Embed(
-                title=f"\N{GLOBE WITH MERIDIANS} Fortnite Item Shop — {title}",
-                description=f"Support the creator **{creator_code}** \N{PURPLE HEART}  | Updates daily at 00:00 UTC",
+                title=f"🌌 Fortnite Item Shop — {title}",
+                description=f"Support the creator **{creator_code}** 💜  | Updates daily at 00:00 UTC",
                 color=discord.Color.purple()
             )
             e.set_footer(text="Powered by GalacticModz")
-
-            # Use first item as thumbnail if present
             try:
                 thumb = chunk[0]["items"][0]["images"]["icon"]
                 if thumb:
@@ -44,7 +42,6 @@ def build_shop_embeds(shop_json, creator_code="YTBUSTY", full=False):
                     e.add_field(name=name, value=f"Rarity: {rarity}\nPrice: {price} V-Bucks", inline=False)
                 except Exception:
                     continue
-
             embeds.append(e)
 
     if not embeds:
